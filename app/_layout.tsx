@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import '@/globals.css'
 
 export default function RootLayout() {
   return (
@@ -8,6 +9,7 @@ export default function RootLayout() {
        }
      }>
       <Stack.Screen name="(tabs)"></Stack.Screen>
+      <Stack.Screen name="login"></Stack.Screen>
      </Stack>
   )
 }
