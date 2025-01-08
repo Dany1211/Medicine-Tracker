@@ -12,6 +12,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.jsx",        // Add this line for JSX files
+    "**/*.js",         // Add this line for JS files (if used)
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
