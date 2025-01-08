@@ -10,7 +10,7 @@ const router=useRouter();
 
 
   return (
-    <View>
+    <View className="bg-white flex-1">
       <View className="items-center mt-20">
         <Image
           source={require("@/assets/images/logoSplash.png")}
