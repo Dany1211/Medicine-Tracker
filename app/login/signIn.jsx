@@ -19,7 +19,7 @@ const SignIn = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
-        router.replace("/ (tabs)");
+        router.replace('/ (tabs)')
       })
       .catch((error) => {
         console.log("Firebase Auth Error:", error);

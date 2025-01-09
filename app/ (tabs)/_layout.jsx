@@ -3,8 +3,12 @@ import React from "react";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/config/FirebaseConfig";
+import { useRouter } from "expo-router";
 
 const TabLayout = () => {
+
   return (
     <Tabs
       screenOptions={{
