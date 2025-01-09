@@ -1,10 +1,42 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Text, TextInput, TouchableOpacity, ToastAndroid } from "react-native";
+import React, { useState } from "react";
 import "@/globals.css";
 import { router, useRouter } from "expo-router";
+import {auth} from '@/config/FirebaseConfig'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+
+
 
 const SignUp = () => { 
   const router=useRouter();
+  const [email,setEmail] = useState();
+  const [password,setPassword ] = useState();
+  
+  const onCreateAccount = ()=>{
+
+  if(!email||!password){
+    ToastAndroid.show('Please fill all the details'),ToastAndroid.BOTTOM
+  }
+
+createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    console.log(user)
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode );
+    if(errorCode=='auth/email-already-in-use'){
+      ToastAndroid.show('Email already exists',ToastAndroid.BOTTOM)
+    }
+    // ..
+  });
+  }
+
+
   return (
     <View className="p-[30px] bg-white flex-1 justify-center">
       <Text className="text-[30px] font-bold">Create new account</Text>
@@ -17,18 +49,20 @@ const SignUp = () => {
         ></TextInput>
         <Text className="mt-6">Email</Text>
         <TextInput
+        onChangeText={(value)=>setEmail(value)}
           placeholder="Email"
           className="text-[17px] p-3 rounded-xl border-black border-[1px] mt-3 bg-[#F5F5F5] "
         ></TextInput>
         <Text className="mt-6">Password</Text>
         <TextInput
+        onChangeText={(value)=>setPassword(value)}
           returnKeyType="done"
           secureTextEntry={true}
           placeholder="Password"
           className="text-[17px] p-3 rounded-xl border-black border-[1px] mt-3 bg-[#F5F5F5] "
         ></TextInput>
       </View>
-      <TouchableOpacity className="p-3 bg-blue-500 rounded-xl mt-10">
+      <TouchableOpacity onPress={onCreateAccount} className="p-3 bg-blue-500 rounded-xl mt-10">
         <Text className="text-white text-[18px] text-center font-semibold">
           Create an account
         </Text>
