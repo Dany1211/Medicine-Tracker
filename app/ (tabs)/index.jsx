@@ -7,7 +7,6 @@ const HomeScreen = () => {
   return (
     <View>
       <Text>HomeScreen</Text>
-      <Redirect href={'login'}/>
     </View>
   )
 }
