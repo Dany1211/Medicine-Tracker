@@ -17,7 +17,7 @@ const router=useRouter();
           className="w-[350px] h-[350px] rounded-lg "
         ></Image>
       </View>
-      <View className="p-8 bg-blue-500 h-[100%] mt-[80px]">
+      <View className="p-8 bg-blue-500 h-[100%] mt-[80px] rounded-t-[20px]">
         <Text className=" text-white font-bold text-[30px] text-center">Stay on Track,Stay Healthy!</Text>
         <Text className="text-white text-center text-[18px] mt-[20px]">Track your Meds, take control of your health, stay consistent, stay confident. </Text>
 
