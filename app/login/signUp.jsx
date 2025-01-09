@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ToastAndroid } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ToastAndroid, Alert } from "react-native";
 import React, { useState } from "react";
 import "@/globals.css";
 import { router, useRouter } from "expo-router";
@@ -15,7 +15,8 @@ const SignUp = () => {
   const onCreateAccount = ()=>{
 
   if(!email||!password){
-    ToastAndroid.show('Please fill all the details'),ToastAndroid.BOTTOM
+    ToastAndroid.show('Please fill all the details',ToastAndroid.BOTTOM)
+    Alert.alert('Please fill all the details')
   }
 
 createUserWithEmailAndPassword(auth, email, password)
@@ -23,6 +24,8 @@ createUserWithEmailAndPassword(auth, email, password)
     // Signed up 
     const user = userCredential.user;
     console.log(user)
+    router.push("/ (tabs)")
+
     // ...
   })
   .catch((error) => {
@@ -31,6 +34,7 @@ createUserWithEmailAndPassword(auth, email, password)
     console.log(errorCode );
     if(errorCode=='auth/email-already-in-use'){
       ToastAndroid.show('Email already exists',ToastAndroid.BOTTOM)
+      Alert.alert('Email already exists')
     }
     // ..
   });
