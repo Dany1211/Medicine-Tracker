@@ -10,6 +10,7 @@ export default function RootLayout() {
      }>
       <Stack.Screen name="(tabs)"></Stack.Screen>
       <Stack.Screen name="login"></Stack.Screen>
+      <Stack.Screen name="add-new-medication"></Stack.Screen>
      </Stack>
   )
 }
