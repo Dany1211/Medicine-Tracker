@@ -5,14 +5,16 @@ import '@/globals.css'
 import { signOut } from 'firebase/auth'
 import { auth } from '@/config/FirebaseConfig'
 import { useRouter } from 'expo-router'
+import Header from '@/components/Header'
+import EmptyState from '@/components/EmptyState'
 
 const HomeScreen = () => {
   const router=useRouter();
 
   return (
-    <View>
-      <Text>HoScreen</Text>
-      <Button title='Log Out' onPress={()=>signOut(auth)}></Button>
+    <View className='p-[25px] bg-white h-[100%]'>
+      <Header/>
+      <EmptyState/>
 
     </View>
   )

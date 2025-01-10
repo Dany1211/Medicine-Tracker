@@ -10,6 +10,9 @@ import { getLocalStorage } from "@/service/Storage";
 
 const TabLayout = () => {
   const router=useRouter();
+  useEffect(()=>{
+    GetUserDetail()
+  },[])
   const GetUserDetail=async ()=>{
     const userInfo =await getLocalStorage('userDetail')
     if(!userInfo){
@@ -17,9 +20,7 @@ const TabLayout = () => {
     }
   }
 
-  useEffect(()=>{
-    GetUserDetail()
-  },[])
+  
  
 
 
