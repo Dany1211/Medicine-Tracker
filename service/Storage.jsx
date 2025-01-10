@@ -4,7 +4,7 @@ await AsyncStorage.setItem(key,JSON.stringify(value));
 }
 
 export const getLocalStorage = async (key)=>{
-    const result = await AsyncStorage.setItem(key);
+    const result = await AsyncStorage.getItem(key);
     return JSON.parse(result);
 }
 
