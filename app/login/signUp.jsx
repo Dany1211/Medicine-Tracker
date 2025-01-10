@@ -4,6 +4,7 @@ import "@/globals.css";
 import { router, useRouter } from "expo-router";
 import {auth} from '@/config/FirebaseConfig'
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { setLocalStorage } from "@/service/Storage";
 
 
 
@@ -27,6 +28,7 @@ createUserWithEmailAndPassword(auth, email, password)
    await updateProfile(user,{
     displayName : username
    })
+   await setLocalStorage('userDetail',user);
     router.push("/ (tabs)")
 
     // ...
