@@ -1,24 +1,22 @@
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, TextInput, FlatList, TouchableOpacity, Image, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { TypeList, WhenToTake } from "@/constant/Options";
 import { Picker } from "@react-native-picker/picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { formatDate, formatDateForText, formatTime } from "@/service/ConvertDateTime";
+import { formatDate, formatDateForText, formatTime, getDatesRange } from "@/service/ConvertDateTime";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/config/FirebaseConfig";
+import { getLocalStorage } from "@/service/Storage";
+import { useRouter } from 'expo-router';
 
 const AddMedicationForm = () => {
   const [formData, setFormData] = useState({});
   const [selectedType, setSelectedType] = useState(null);
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
-  const [showTimePicker,setShowTimePicker] = useState (false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const router = useRouter();
 
   const onHandleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -33,9 +31,49 @@ const AddMedicationForm = () => {
   };
 
   useEffect(() => {
-    console.log(formData); 
+    console.log(formData);
   }, [formData]);
 
+  const saveMedication = async () => {
+    const user = await getLocalStorage("userDetail");
+
+    if (
+      !(
+        formData?.name &&
+        formData?.type &&
+        formData?.dose &&
+        formData?.startDate &&
+        formData?.endDate &&
+        formData?.remainder
+      )
+    ) {
+      Alert.alert("Please enter all fields");
+      return;
+
+    }
+    const dates=getDatesRange(formData?.startDate,formData?.endDate);
+    console.log(dates)
+
+    try {
+      await addDoc(collection(db, "medications"), {
+        ...formData,
+        userEmail: user?.email,
+        createdAt: new Date(),
+        dates:dates
+      });
+      Alert.alert("Medication added successfully", "", [
+        {
+          text: "OK",
+          onPress: () => {
+            router.push('/ (tabs)');
+          },
+        },
+      ]);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      Alert.alert('Failed to add medication');
+    }
+  };
   return (
     <View className="p-6">
       <Text className="font-bold text-[25px]">Add New Medication</Text>
@@ -63,10 +101,21 @@ const AddMedicationForm = () => {
           <TouchableOpacity
             onPress={() => handleSelect(item)}
             className={`flex-row items-center rounded-xl p-[12px] mx-2 border-[#E5E7EB] border-[1px] mt-4 
-                            ${selectedType === item.name ? "bg-blue-500" : "bg-white"}`}
+                            ${
+                              selectedType === item.name
+                                ? "bg-blue-500"
+                                : "bg-white"
+                            }`}
           >
-            <Image source={{ uri: item.icon }} style={{ width: 24, height: 24, marginRight: 8 }} />
-            <Text className={`text-[14px] ${selectedType === item.name ? "text-white" : "text-black"}`}>
+            <Image
+              source={{ uri: item.icon }}
+              style={{ width: 24, height: 24, marginRight: 8 }}
+            />
+            <Text
+              className={`text-[14px] ${
+                selectedType === item.name ? "text-white" : "text-black"
+              }`}
+            >
               {item.name}
             </Text>
           </TouchableOpacity>
@@ -82,7 +131,7 @@ const AddMedicationForm = () => {
           className="border-r-[1px] pr-[10px] border-[#E5E7EB]"
         />
         <TextInput
-          onChangeText={(value) => onHandleInputChange("dose", value)} 
+          onChangeText={(value) => onHandleInputChange("dose", value)}
           placeholder="Dose Ex. 1, 2 drops, 10ml"
           className="flex-1 px-2 py-3 rounded text-[16px]"
         />
@@ -125,7 +174,7 @@ const AddMedicationForm = () => {
             {formatDateForText(formData?.startDate) ?? "Start Date"}
           </Text>
         </TouchableOpacity>
-        
+
         {showStartDate && (
           <RNDateTimePicker
             minimumDate={new Date()}
@@ -164,7 +213,7 @@ const AddMedicationForm = () => {
                 "endDate",
                 formatDate(event.nativeEvent.timestamp)
               );
-              setShowEndDate(false); 
+              setShowEndDate(false);
             }}
           />
         )}
@@ -172,40 +221,44 @@ const AddMedicationForm = () => {
 
       {/* remainder input section  */}
       <View className="flex flex-row justify-between gap-5">
-      <TouchableOpacity
-        className="flex-1 flex-row items-center rounded-xl pl-3 py-1 border-[#E5E7EB] border-[1px] mt-4 gap-1"
-        onPress={() => setShowTimePicker(true)}
-      >
-        <Ionicons
-          name="timer-outline"
-          size={24}
-          color="#3B82F6"
-          className="border-r-[1px] pr-[10px] border-[#E5E7EB]"
-        />
-        <Text className="flex-1 px-2 py-3 text-[16px]">
-          {formData?.remainder ? formatTime(formData.remainder) : "Set Reminder"}
+        <TouchableOpacity
+          className="flex-1 flex-row items-center rounded-xl pl-3 py-1 border-[#E5E7EB] border-[1px] mt-4 gap-1"
+          onPress={() => setShowTimePicker(true)}
+        >
+          <Ionicons
+            name="timer-outline"
+            size={24}
+            color="#3B82F6"
+            className="border-r-[1px] pr-[10px] border-[#E5E7EB]"
+          />
+          <Text className="flex-1 px-2 py-3 text-[16px]">
+            {formData?.remainder
+              ? formatTime(formData.remainder)
+              : "Set Reminder"}
+          </Text>
+        </TouchableOpacity>
+
+        {showTimePicker && (
+          <RNDateTimePicker
+            mode="time"
+            value={
+              formData?.remainder ? new Date(formData.remainder) : new Date()
+            }
+            onChange={(event) => {
+              if (event.type === "set") {
+                onHandleInputChange("remainder", event.nativeEvent.timestamp);
+              }
+              setShowTimePicker(false);
+            }}
+          />
+        )}
+      </View>
+
+      <TouchableOpacity onPress={() => saveMedication()} className="w-[100%]">
+        <Text className="p-[15px]  bg-blue-500 rounded-[50px] text-center mt-7 text-[18px] text-white font-medium">
+          Add Medication
         </Text>
       </TouchableOpacity>
-
-      {showTimePicker && (
-        <RNDateTimePicker
-          mode="time"
-          value={formData?.remainder ? new Date(formData.remainder) : new Date()}
-          onChange={(event) => {
-            if (event.type === 'set') {
-              onHandleInputChange('remainder', event.nativeEvent.timestamp);
-            }
-            setShowTimePicker(false); // Close the time picker
-          }}
-        />
-      )}
-    </View>
-
-    <TouchableOpacity className="w-[100%]">
-            <Text className="p-[15px]  bg-blue-500 rounded-[50px] text-center mt-7 text-[18px] text-white font-medium">Add Medication</Text>
-        </TouchableOpacity>
-    
-
     </View>
   );
 };
