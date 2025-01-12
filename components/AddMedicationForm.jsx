@@ -232,9 +232,7 @@ const AddMedicationForm = () => {
             className="border-r-[1px] pr-[10px] border-[#E5E7EB]"
           />
           <Text className="flex-1 px-2 py-3 text-[16px]">
-            {formData?.remainder
-              ? formatTime(formData.remainder)
-              : "Set Reminder"}
+            {formData?.remainder??'set reminder'}
           </Text>
         </TouchableOpacity>
 
@@ -242,11 +240,11 @@ const AddMedicationForm = () => {
           <RNDateTimePicker
             mode="time"
             value={
-              formData?.remainder ? new Date(formData.remainder) : new Date()
+              formData?.remainder?? new Date()
             }
             onChange={(event) => {
               if (event.type === "set") {
-                onHandleInputChange("remainder", event.nativeEvent.timestamp);
+                onHandleInputChange("remainder", formatTime(event.nativeEvent.timestamp));
               }
               setShowTimePicker(false);
             }}
