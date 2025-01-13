@@ -130,7 +130,7 @@ const MedicationList = () => {
               selectedDate:selectedDate
             }
           })}>
-          <MedicationListCardItem medicine={item} />
+          <MedicationListCardItem medicine={item} selectedDate={selectedDate} />
           </TouchableOpacity>
         )}
       ></FlatList>:<EmptyState></EmptyState>}

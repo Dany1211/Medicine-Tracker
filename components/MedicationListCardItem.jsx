@@ -1,8 +1,21 @@
 import { View, Text, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const MedicationListCardItem = ({ medicine }) => {
+const MedicationListCardItem = ({ medicine,selectedDate='' }) => {
+console.log(medicine)
+const [status,setStatus] = useState ();
+
+useEffect(()=>{
+  CheckStatus();
+},[medicine])
+ const CheckStatus =  () => {
+     const data = medicine?.action?.find((item)=>item.date==selectedDate)
+     console.log(data);
+     setStatus(data)
+
+ }
+
   return (
     <View className="mt-3 p-3 rounded-[15px] border-gray-100 border-[2px] flex-row justify-between items-center w-full">
       <View className="flex-row gap-3 items-center">
@@ -37,6 +50,23 @@ const MedicationListCardItem = ({ medicine }) => {
             {medicine?.remainder}
         </Text>
       </View>
+
+
+
+     {status?.date&& <View className="absolute top-1 left-1">
+     {status?.status=='Taken'? <Ionicons
+            name="checkmark-circle"
+            size={24}
+            color="#22C55E"
+            className="pr-[10px] "
+          />:
+          status?.status=='Missed'&& <Ionicons
+          name="close-circle"
+          size={24}
+          color="#EF4444"
+          className="pr-[10px] "
+        />}
+      </View> }
     </View>
 
 
