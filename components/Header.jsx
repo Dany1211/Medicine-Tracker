@@ -1,4 +1,4 @@
-import { View, Text, Image, Button } from "react-native";
+import { View, Text, Image, Button, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getLocalStorage } from "@/service/Storage";
 import { router } from "expo-router";
@@ -29,9 +29,9 @@ const Header = () => {
           </Text>
         </View>
 
-        <View>
-          <Ionicons  name="settings-outline" size={30} color={'#8f8f8f'} />
-        </View>
+        <TouchableOpacity onPress={()=>router.push('/add-new-medication')}>
+          <Ionicons  name="medkit-outline" size={30} color={'#3B82F6'} />
+        </TouchableOpacity>
       </View>
     </View>
   );

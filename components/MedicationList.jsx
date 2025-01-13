@@ -6,6 +6,7 @@ import { getLocalStorage } from "@/service/Storage";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import MedicationListCardItem from "./MedicationListCardItem";
+import EmptyState from "./EmptyState";
 
 const MedicationList = () => {
   const [medList, setMedList] = useState([]);
@@ -13,6 +14,7 @@ const MedicationList = () => {
   const [selectedDate, setSelectedDate] = useState(
     moment().format("DD/MM/YYYY")
   );
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
     getDateRangeList();
@@ -34,6 +36,7 @@ const MedicationList = () => {
   };
 
   const GetMedicationList = async (selectedDate) => {
+    setLoading(true);
     const user = await getLocalStorage("userDetail");
 
     console.log("User Email:", user?.email);
@@ -60,10 +63,12 @@ const MedicationList = () => {
       }
 
       console.log("Fetched Medications:", medications);
-
+      
       setMedList(medications);
+      setLoading(false)
     } catch (e) {
       console.error("Error fetching medications:", e);
+      setLoading(false)
     }
   };
 
@@ -110,13 +115,18 @@ const MedicationList = () => {
 
       {/* Display fetched medications */}
 
-      <FlatList
+    {medList.length>0?  <FlatList
+    
         className="mt-2"
         data={medList}
+        onRefresh={()=>GetMedicationList(selectedDate)}
+        refreshing={loading}
         renderItem={({ item, index }) => (
+          <TouchableOpacity>
           <MedicationListCardItem medicine={item} />
+          </TouchableOpacity>
         )}
-      ></FlatList>
+      ></FlatList>:<EmptyState></EmptyState>}
     </View>
   );
 };
