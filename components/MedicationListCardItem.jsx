@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 const MedicationListCardItem = ({ medicine }) => {
   return (
-    <View className="mt-3 p-3 rounded-[15px] border-gray-100 border-[2px] flex-row justify-between items-center">
+    <View className="mt-3 p-3 rounded-[15px] border-gray-100 border-[2px] flex-row justify-between items-center w-full">
       <View className="flex-row gap-3 items-center">
         <View className="bg-white p-2 rounded-[15px]">
           <Image

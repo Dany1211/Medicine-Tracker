@@ -17,7 +17,7 @@ const Header = () => {
   };
 
   return (
-    <View className="">
+    <View>
       <View className=" flex-row items-center gap-3 justify-between">
         <View className=" flex-row items-center gap-3 ">
           <Image
