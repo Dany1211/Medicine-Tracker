@@ -8,6 +8,7 @@ import { auth } from "@/config/FirebaseConfig";
 import { useRouter } from "expo-router";
 import { getLocalStorage } from "@/service/Storage";
 
+
 const TabLayout = () => {
   const router=useRouter();
   useEffect(()=>{
@@ -36,15 +37,6 @@ const TabLayout = () => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="AddNew"
-        options={{
-          tabBarLabel:'Home',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="plus-square" size={30} color={color} />
           ),
         }}
       />
